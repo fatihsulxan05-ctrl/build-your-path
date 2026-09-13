@@ -573,10 +573,17 @@ function Index() {
   };
 
   const ekle = (sadeceAidat = false) => {
-    const yeniNo = talebeler.length + 1;
+    // Boş formu aç; kaydet ancak tüm bilgiler doldurulunca yapılır.
+    setYeniTalebe({ isim: "", sinif: "", dogum: "", telefon: "", notlar: "", grup: "" });
+    setYeniTalebeAcik(sadeceAidat ? "aidat" : "hafiz");
+  };
+
+  const yeniTalebeKaydet = () => {
+    const isim = yeniTalebe.isim.trim();
+    if (!isim) return;
     const enBuyukSira = talebeler.reduce((m, t) => Math.max(m, t.sira ?? 0), 0);
-    void talebeEkle({
-      isim: `Talebe ${yeniNo}`,
+    const patch: Omit<Talebe, "id"> = {
+      isim,
       kiraat: false,
       sayfa: 1,
       gecmis: [{ t: Date.now(), sayfa: 1 }],
@@ -584,9 +591,21 @@ function Index() {
       yon: "alttan",
       fikihKonu: 1,
       hadisNo: 1,
-      aidatSadece: sadeceAidat,
+      aidatSadece: yeniTalebeAcik === "aidat",
       aidatHaric: false,
-    });
+    };
+    const sinif = yeniTalebe.sinif.trim();
+    const dogum = yeniTalebe.dogum.trim();
+    const telefon = yeniTalebe.telefon.trim();
+    const notlar = yeniTalebe.notlar.trim();
+    if (sinif) patch.sinif = sinif;
+    if (dogum) patch.dogum = dogum;
+    if (telefon) patch.telefon = telefon;
+    if (notlar) patch.notlar = notlar;
+    if (yeniTalebe.grup) patch.grup = yeniTalebe.grup;
+    void talebeEkle(patch);
+    setYeniTalebeAcik(null);
+    toast.success(`${isim} eklendi`);
   };
 
   const hafizTalebeler = useMemo(() => talebeler.filter((t) => !t.aidatSadece), [talebeler]);
