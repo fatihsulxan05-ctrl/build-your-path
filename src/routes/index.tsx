@@ -592,8 +592,8 @@ function Index() {
       yon: "alttan",
       fikihKonu: 1,
       hadisNo: 1,
-      aidatSadece: yeniTalebeAcik === "aidat",
-      aidatHaric: false,
+    aidatSadece: yeniTalebeAcik === "aidat",
+      aidatHaric: yeniTalebeAcik !== "aidat",
     };
     const sinif = yeniTalebe.sinif.trim();
     const dogum = yeniTalebe.dogum.trim();
