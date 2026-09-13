@@ -2004,6 +2004,124 @@ function Index() {
           }}
         />
 
+        <Dialog
+          open={yeniTalebeAcik !== null}
+          onOpenChange={(o) => {
+            if (!o) setYeniTalebeAcik(null);
+          }}
+        >
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>
+                {yeniTalebeAcik === "aidat" ? "Aidata talebe ekle" : tr("talebeEkle")}
+              </DialogTitle>
+              <DialogDescription>
+                Talebenin bilgilerini doldurun, ardından ekleyin.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="yt-isim">İsim *</Label>
+                <Input
+                  id="yt-isim"
+                  value={yeniTalebe.isim}
+                  onChange={(e) =>
+                    setYeniTalebe((p) => ({ ...p, isim: e.target.value.slice(0, 60) }))
+                  }
+                  maxLength={60}
+                  placeholder="Talebenin adı"
+                  autoFocus
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor="yt-dogum">Yaşı / Doğum tarihi</Label>
+                  <Input
+                    id="yt-dogum"
+                    type="date"
+                    value={yeniTalebe.dogum}
+                    onChange={(e) => setYeniTalebe((p) => ({ ...p, dogum: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="yt-sinif">Sınıfı</Label>
+                  <Input
+                    id="yt-sinif"
+                    value={yeniTalebe.sinif}
+                    onChange={(e) =>
+                      setYeniTalebe((p) => ({ ...p, sinif: e.target.value.slice(0, 30) }))
+                    }
+                    maxLength={30}
+                    placeholder="Örn. 5. sınıf"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="yt-telefon">Telefon numarası</Label>
+                <Input
+                  id="yt-telefon"
+                  type="tel"
+                  inputMode="tel"
+                  value={yeniTalebe.telefon}
+                  onChange={(e) =>
+                    setYeniTalebe((p) => ({ ...p, telefon: e.target.value.slice(0, 20) }))
+                  }
+                  maxLength={20}
+                  placeholder="+251 ..."
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label>Grubu</Label>
+                <Select
+                  value={yeniTalebe.grup || "yok"}
+                  onValueChange={(v) =>
+                    setYeniTalebe((p) => ({ ...p, grup: v === "yok" ? "" : v }))
+                  }
+                >
+                  <SelectTrigger className="h-9">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yok">Grup yok</SelectItem>
+                    {gruplar.map((g) => (
+                      <SelectItem key={g.id} value={g.id}>
+                        {g.ad}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="yt-notlar">Notlar</Label>
+                <Textarea
+                  id="yt-notlar"
+                  value={yeniTalebe.notlar}
+                  onChange={(e) =>
+                    setYeniTalebe((p) => ({ ...p, notlar: e.target.value.slice(0, 500) }))
+                  }
+                  maxLength={500}
+                  rows={3}
+                  placeholder="Eklemek istediğiniz notlar..."
+                />
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setYeniTalebeAcik(null)}>
+                İptal
+              </Button>
+              <Button onClick={yeniTalebeKaydet} disabled={!yeniTalebe.isim.trim()}>
+                Ekle
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         <ProfilDiyalog
           talebe={
             profilGoster ? (talebeler.find((x) => x.id === profilGoster.id) ?? profilGoster) : null
