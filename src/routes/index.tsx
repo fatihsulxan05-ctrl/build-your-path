@@ -538,8 +538,9 @@ function Index() {
 
   const sil = (id: string) => {
     const mevcut = talebeler.find((t) => t.id === id);
-    // Hafızlık listesinden çıkar; aidat listesinde kalmaya devam etsin.
-    if (mevcut && !mevcut.aidatHaric) {
+    // Hafızlık listesindeyse önce oradan çıkar (aidat listesinde kalsın);
+    // zaten sadece aidattaysa kaydı tamamen sil.
+    if (mevcut && !mevcut.aidatSadece) {
       void talebeGuncelle(id, { aidatSadece: true });
       return;
     }
